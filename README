@@ -1,0 +1,80 @@
+
+
+
+
+                      LLLP = Lua LPeg Lojban Parser
+
+                            (Version = alpha)
+
+
+
+  Requirements:
+
+     lua5.1x (or luajit2) and the LPeg library (either built-in or external)
+
+ LuaJIT doesn't seem to offer any benefit for the PEG but makes a difference
+ in auxiliary operations. However, for reasonable sized texts the difference
+ is negligible.
+
+  lua    : http://www.lua.org
+  luajit : http://luajit.org
+  LPeg   : http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
+           http://www.inf.puc-rio.br/~roberto/docs/peg.pdf (theoretical basis)
+
+ LLLP files:
+ 
+  lllp.lua                the main program script
+  lllp_morphology.lua     the Lojban morphology PEG
+  lllp_lujvo_splitter.lua a lujvo splitting PEG
+  lllp_syntax_r.lua       the Lojban syntax PEG, a reduced output version
+  lllp_r2g.lua            rafsi decoding tables for the pretty printer
+  
+  lllp_params.lua         user definable parameters: edit this file
+  
+  The reduced output version of the syntax PEG omits the numbered intermediate
+  rules (e.g. term-1) from the output because the depth of the "full" parse
+  tree can exceed the maximum number of syntax levels an unmodified lua/luajit
+  interpreter can handle (200 levels), and increasing the limit can be unsafe.
+  While parsing "Alice" using the "full" output version, the program hit the
+  limit at three points. I've set the program to use the reduced output version
+  as the full output isn't usually required.
+  
+  A luajit linux binary with built-in LPeg library is included in the package.
+     
+  Running:
+
+     luajit lllp.lua lojban_file_name
+
+
+  NB. the output goes to STDOUT and can be re-directed as required
+
+  NB. the output parameters can only be set by editing lllp.lua
+
+  NB. input text is sliced at blank lines and handled block by block.
+      This means that terminated structures MUST NOT span blank lines!
+      
+  NB. punctuation handling is still deficient (this is an alpha version)
+  
+
+  Lua commenting conventions can be used within the Lojban files:
+
+    --   two or more adjacent dashes mark the rest of the line as comment
+    
+    --[[ starts a multi-line comment ending at --]] or EOF
+         A space between -- and [[ can be used to de-activate the commenting
+
+  The output can be fine-tuned quite extensively by editing lllp.lua. It is
+  also possible to add processing stages at various points.
+  
+  The program gathers statistics about word usage. 
+  
+  There is no error handling. The processing of a block terminates when a
+  syntax error is found, and the program continues with the next block if any.
+  
+  I've tested the parser with both single sentences and the full "Alice", and
+  there don't seem to be any major problems. Alice does contain a number of
+  blocks which don't pass the parser, but most do. On a decent PC the process
+  takes about one minute, and the reduced tree output interleaved with the
+  source text blocks is about 2000 A4 pages long, depending on the output
+  parameters used.
+ 
