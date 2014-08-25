@@ -38,8 +38,6 @@
   While parsing "Alice" using the "full" output version, the program hit the
   limit at three points. I've set the program to use the reduced output version
   as the full output isn't usually required.
-  
-  A luajit linux binary with built-in LPeg library is included in the package.
      
   Running:
 
